@@ -1,0 +1,9 @@
+version: '2'
+services:
+
+  tsh:
+    build:
+      context: tsh/
+    volumes:
+      - ../project:/app
+    stdin_open: true
