@@ -1,11 +1,11 @@
 #
 # trace14.txt - Simple error handling
 #
-/bin/echo tsh> ./bogus
-./bogus
+/bin/echo tsh> ./rel/bogus
+./rel/bogus
 
-/bin/echo -e tsh> ./myspin 4 \046
-./myspin 4 &
+/bin/echo -e tsh> ./rel/myspin 4 \046
+./rel/myspin 4 &
 
 /bin/echo tsh> fg
 fg
@@ -42,6 +42,3 @@ bg %1
 
 /bin/echo tsh> jobs
 jobs
-
-
-

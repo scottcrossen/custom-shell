@@ -43,6 +43,7 @@ ${BINDIR}/%.o: ${SOURCEDIR}/%.c
 	mkdir -p $(@D)
 	$(COMP) -c $< -o $@ $(COMPFLAGS)
 
+.PRECIOUS: ${RELDIR}/%
 ${RELDIR}/%: ${BINDIR}/%.o
 	mkdir -p $(@D)
 	$(COMP) $^ -o $@ $(LINKFLAGS)
@@ -50,37 +51,37 @@ ${RELDIR}/%: ${BINDIR}/%.o
 # ==== Regression Tests ====
 
 # Run tests using the custom shell program
-test01:
+test01: $(TSH)
 	$(DRIVER) -t ./test/cases/trace01.txt -s $(TSH) -a $(TSHARGS)
-test02:
+test02: $(TSH)
 	$(DRIVER) -t ./test/cases/trace02.txt -s $(TSH) -a $(TSHARGS)
-test03:
+test03: $(TSH)
 	$(DRIVER) -t ./test/cases/trace03.txt -s $(TSH) -a $(TSHARGS)
-test04:
+test04: $(TSH)
 	$(DRIVER) -t ./test/cases/trace04.txt -s $(TSH) -a $(TSHARGS)
-test05:
+test05: $(TSH)
 	$(DRIVER) -t ./test/cases/trace05.txt -s $(TSH) -a $(TSHARGS)
-test06:
+test06: $(TSH)
 	$(DRIVER) -t ./test/cases/trace06.txt -s $(TSH) -a $(TSHARGS)
-test07:
+test07: $(TSH)
 	$(DRIVER) -t ./test/cases/trace07.txt -s $(TSH) -a $(TSHARGS)
-test08:
+test08: $(TSH)
 	$(DRIVER) -t ./test/cases/trace08.txt -s $(TSH) -a $(TSHARGS)
-test09:
+test09: $(TSH)
 	$(DRIVER) -t ./test/cases/trace09.txt -s $(TSH) -a $(TSHARGS)
-test10:
+test10: $(TSH)
 	$(DRIVER) -t ./test/cases/trace10.txt -s $(TSH) -a $(TSHARGS)
-test11:
+test11: $(TSH)
 	$(DRIVER) -t ./test/cases/trace11.txt -s $(TSH) -a $(TSHARGS)
-test12:
+test12: $(TSH)
 	$(DRIVER) -t ./test/cases/trace12.txt -s $(TSH) -a $(TSHARGS)
-test13:
+test13: $(TSH)
 	$(DRIVER) -t ./test/cases/trace13.txt -s $(TSH) -a $(TSHARGS)
-test14:
+test14: $(TSH)
 	$(DRIVER) -t ./test/cases/trace14.txt -s $(TSH) -a $(TSHARGS)
-test15:
+test15: $(TSH)
 	$(DRIVER) -t ./test/cases/trace15.txt -s $(TSH) -a $(TSHARGS)
-test16:
+test16: $(TSH)
 	$(DRIVER) -t ./test/cases/trace16.txt -s $(TSH) -a $(TSHARGS)
 
 # Run the tests using the reference shell program

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SLEEPAMNT=2
+
 function finish {
 	if [ $PID1 -ge 0 ]; then
 		kill $PID1
@@ -9,20 +11,40 @@ function finish {
 
 trap 'finish' SIGTERM
 
+function test {
+	# test 08, 12 and 16 breaks docker but works outside.
+	for number in 0{1..7} 09 {10..11} {13..15}; do
+		echo "testing ${number}"
+		# Diff custom and provided shell by piping output to (1) remove first line, (2) remove comments, (3) reformat pids in background, (4) reformat pids in ps, (5) reformat shell name
+		DIFF=$(diff <(make test${number} | sed -n '1!p' | sed '/^#/ d' | sed 's/\[[0-9]\]\s([0-9]*)\s/[?] (????) /' | sed -r 's/[0-9]+/???/' | sed -r 's/(.\/)?(rel\/tsh)|(test\/tshref)/shell/') <(make rtest${number} | sed -n '1!p' | sed '/^#/ d' | sed 's/\[[0-9]\]\s([0-9]*)\s/[?] (????) /' | sed -r 's/[0-9]+/???/' | sed -r 's/(.\/)?(rel\/tsh)|(test\/tshref)/shell/'))
+		if [[ $DIFF ]]; then
+			echo "Found difference on test ${number}"
+			echo -e "\nCustom Shell:"
+			make test${number} | sed -n '1!p'
+			echo -e "\nProvided Shell:"
+			make rtest${number} | sed -n '1!p'
+			break
+		fi ;
+	done
+	echo -e "\nTesting Finished"
+}
+
+if [ ! -f ./Makefile ]; then
+	echo -e "\n[INFO] No Makefile found. File must exist\n"
+	exit
+fi
+
 PID1=-1
 while true; do
-	if [ ! -f rel/tsh ]; then
-		echo -e "\n[INFO] No executable file found. Waiting for file before restarting test cases\n"
-	while [ ! -f rel/tsh ]; do sleep 2; done
-	fi
 	if [ $PID1 -ge 0 ]; then
-		echo -e "\n[INFO] Restarting test cases\n"
+		echo -e "\n[INFO] Restarting test cases in ${SLEEPAMNT} seconds\n"
 	  kill $PID1
 		PID1=-1
 	fi
-	sleep 2 && make test01 test02 &
+	sleep ${SLEEPAMNT} && test &
   PID1=$!
-  inotifywait -e modify -e delete -e create -e attrib rel/tsh
+  inotifywait -e modify -e delete -e create -e attrib ./*
+	make
 done &
 PID2=$!
 
