@@ -298,11 +298,11 @@ int builtin_cmd(char **argv)
 			printf("%s command requires PID or %%jobid argument\n", argv[0]); return 1;
 		}
 
-		char *s = argv[1]-1;
-		while (*++s) {
-			if (*s == '%') {
+		char *pos = argv[1]-1;
+		while (*++pos) {
+			if (*pos == '%') {
         continue;
-			} else if (!isdigit(*s)) {
+			} else if (!isdigit(*pos)) {
 				printf("%s: argument must be a PID or %%jobid\n", argv[0]); return 1;
 			}
 		}
@@ -423,6 +423,7 @@ void sigtstp_handler(int sig)
 	if (pid) {
 		kill(pid * -1, sig);
   }
+
 	return;
 }
 

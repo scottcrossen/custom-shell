@@ -16,17 +16,18 @@ function test {
 	for number in 0{1..7} 09 {10..11} {13..15}; do
 		echo "testing ${number}"
 		# Diff custom and provided shell by piping output to (1) remove first line, (2) remove comments, (3) reformat pids in background, (4) reformat pids in ps, (5) reformat shell name
-		DIFF=$(diff <(make test${number} | sed -n '1!p' | sed '/^#/ d' | sed 's/\[[0-9]\]\s([0-9]*)\s/[?] (????) /' | sed -r 's/[0-9]+/???/' | sed -r 's/(.\/)?(rel\/tsh)|(test\/tshref)/shell/') <(make rtest${number} | sed -n '1!p' | sed '/^#/ d' | sed 's/\[[0-9]\]\s([0-9]*)\s/[?] (????) /' | sed -r 's/[0-9]+/???/' | sed -r 's/(.\/)?(rel\/tsh)|(test\/tshref)/shell/'))
+		DIFF=$(diff <(make test${number} | sed -n '1!p' | sed '/^#/ d' | sed 's/\[[0-9]\]\s([0-9]*)\s/[?] (????) /' | sed -r 's/^\s*[0-9]+/???/' | sed -r 's/(.\/)?(rel\/tsh)|(test\/tshref)/shell/') <(make rtest${number} | sed -n '1!p' | sed '/^#/ d' | sed 's/\[[0-9]\]\s([0-9]*)\s/[?] (????) /' | sed -r 's/^\s*[0-9]+/???/' | sed -r 's/(.\/)?(rel\/tsh)|(test\/tshref)/shell/'))
 		if [[ $DIFF ]]; then
 			echo "Found difference on test ${number}"
 			echo -e "\nCustom Shell:"
 			make test${number} | sed -n '1!p'
 			echo -e "\nProvided Shell:"
 			make rtest${number} | sed -n '1!p'
+			echo -e "\nTesting Finished: One Or More Tests Failed."
 			break
 		fi ;
 	done
-	echo -e "\nTesting Finished"
+	echo -e "\nTesting Finished: All Tests Passed!"
 }
 
 if [ ! -f ./Makefile ]; then
