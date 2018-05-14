@@ -6,7 +6,7 @@
 BYUNETID = slxn42
 VERSION = 1
 HANDINDIR = /users/faculty/snell/CS324/handin/Fall2017/Shell
-BINDIR = bin
+TMPDIR = tmp
 SOURCEDIR = source
 RELDIR = rel
 DRIVER = ./test/sdriver.pl
@@ -34,17 +34,17 @@ handin:
 
 .PHONY: clean
 clean:
-	rm -rf $(BINDIR) $(RELDIR)
+	rm -rf $(TMPDIR) $(RELDIR)
 
 # ==== Targets ====
 
-.PRECIOUS: ${BINDIR}/%.o
-${BINDIR}/%.o: ${SOURCEDIR}/%.c
+.PRECIOUS: ${TMPDIR}/%.o
+${TMPDIR}/%.o: ${SOURCEDIR}/%.c
 	mkdir -p $(@D)
 	$(COMP) -c $< -o $@ $(COMPFLAGS)
 
 .PRECIOUS: ${RELDIR}/%
-${RELDIR}/%: ${BINDIR}/%.o
+${RELDIR}/%: ${TMPDIR}/%.o
 	mkdir -p $(@D)
 	$(COMP) $^ -o $@ $(LINKFLAGS)
 
